@@ -32,10 +32,9 @@ Este proyecto utiliza **Oracle Database**.
 
 ### 🔹 Crear la base de datos
 
-Ejecutar el script SQL incluido en el proyecto (por ejemplo en `/database/script.sql`) que contiene:
+Ejecutar el script SQL incluido en el proyecto que contiene:
 
 * Creación de tablas
-* Índices
 * Llaves primarias
 * Llaves foráneas
 * Inserciones de catálogos
@@ -114,22 +113,6 @@ Incluye relaciones:
 * Usuario → Hobbies
 
 ---
-
-# 🧪 Datos Iniciales
-
-El script incluye:
-
-* Países (México, España, Argentina)
-* Estados
-* Municipios
-* Colonias
-* Catálogo de Hobbies
-
-Esto permite probar el sistema inmediatamente después de ejecutar el script.
-
----
-
-
-# 👨‍💻 Autor
+# 👨‍💻 Autor: Jose Vera Luna
 
 Desarrollado como prueba tecnica
