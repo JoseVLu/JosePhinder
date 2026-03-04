@@ -29,13 +29,13 @@ public class UsuarioService {
             List<JVera.ProgramacionNCapasNoviembre25.JPA.Usuario> usuarios = usuarioJPARepository.findAll();
             result.Objects = new ArrayList<Object>(usuarios);
             result.Correct = true;
-            result.statuscode = 200;
+            
 
         } catch (Exception ex) {
             result.Correct = false;
             result.Errormessage = ex.getLocalizedMessage();
             result.Ex = ex;
-            result.statuscode = 500;
+            
         }
 
         return result;
@@ -46,15 +46,18 @@ public class UsuarioService {
         try {
 
             JVera.ProgramacionNCapasNoviembre25.JPA.Usuario usuario = usuarioJPARepository.findById(IdUsuario).orElse(null);
+            if(usuario!=null){
             result.Object = usuario;
             result.Correct = true;
-            result.statuscode = 200;
+            }
+            else{
+                result.Correct=false;
+            }
 
         } catch (Exception ex) {
            result.Correct = false;
             result.Errormessage = ex.getLocalizedMessage();
             result.Ex = ex;
-            result.statuscode = 500;
 
         }
         return result;
@@ -67,12 +70,10 @@ public class UsuarioService {
                 usuarioJPARepository.deleteById(IsUsuario);
 
                 result.Correct = true;
-                result.Errormessage="Se elimino el registro correctamente";
-                result.statuscode = 204;
+                
             } else {
                 result.Correct = false;
-                result.Errormessage = "No se encontró el usuario con el ID proporcionado.";
-                result.statuscode = 404;
+                
             }
         } catch (Exception ex) {
             result.Correct = false;
@@ -118,18 +119,16 @@ public class UsuarioService {
                 
 
                 result.Correct = true;
-                result.Errormessage="Se actualizo el registro correctamente";
-                result.statuscode = 200;
+              
             } else {
                 result.Correct = false;
-                result.Errormessage = "No se encontró el usuario con el ID proporcionado.";
-                result.statuscode = 404;
+                
             }
         } catch (Exception ex) {
-            result.Correct = false;
+
             result.Errormessage = ex.getLocalizedMessage();
             result.Ex = ex;
-            result.statuscode = 500;
+        
         }
         return result;
     }

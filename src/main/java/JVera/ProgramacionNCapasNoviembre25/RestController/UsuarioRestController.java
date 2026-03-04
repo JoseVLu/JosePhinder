@@ -40,13 +40,21 @@ public class UsuarioRestController {
 
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Exito en la busqueda"),
-        @ApiResponse(responseCode = "500", description = "Fallo al cargar los usuarios")
+        @ApiResponse(responseCode = "204", description = "No existen usuarios en la BD")
     })
     public ResponseEntity GetAll() {
 
         Result result = usuariojpadaoimplementation.GetAll();
+        
+        if(result.Correct){
+            result.statuscode = 200;
+            return ResponseEntity.status(result.statuscode).body(result.Objects);
+        }else{
+            result.statuscode = 204;
+            return ResponseEntity.status(result.statuscode).build();
+        }
 
-        return ResponseEntity.status(result.statuscode).body(result);
+        
 
     }
 
@@ -54,15 +62,21 @@ public class UsuarioRestController {
 
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Exito en la busqueda"),
-        @ApiResponse(responseCode = "404", description = "No existe usuario con ese ID"),
-        @ApiResponse(responseCode = "500", description = "Fallo al cargar el usuario")
+        @ApiResponse(responseCode = "400", description = "No existe usuario con ese ID"),
     })
     @GetMapping("/{IdUsuario}")
     public ResponseEntity GetById(@PathVariable("IdUsuario") int idUsuario) {
 
         Result result = usuariojpadaoimplementation.GetById(idUsuario);
-
-        return ResponseEntity.status(result.statuscode).body(result);
+        
+        if(result.Correct){
+            result.statuscode = 200;
+            return ResponseEntity.status(result.statuscode).body(result.Object);
+        }
+        else{
+            result.statuscode = 400;
+            return ResponseEntity.status(result.statuscode).body("No existe un registro con ese id");
+        }
 
     }
     
@@ -72,15 +86,21 @@ public class UsuarioRestController {
 
     @ApiResponses({
         @ApiResponse(responseCode = "204", description = "Exito en eliminar un usuario"),
-        @ApiResponse(responseCode = "404", description = "No se encontro el usuario que se quiere eliminar"),
-        @ApiResponse(responseCode = "500", description = "Hubo un error del lado del servidor")
+        @ApiResponse(responseCode = "400", description = "No se encontro el usuario que se quiere eliminar"),
     })
 
     public ResponseEntity Delete(@PathVariable("IdUsuario") int idUsuario) {
 
         Result result = usuariojpadaoimplementation.Delete(idUsuario);
 
-        return ResponseEntity.status(result.statuscode).body(result);
+        if(result.Correct){
+            result.statuscode = 204;
+            return ResponseEntity.status(result.statuscode).build();
+        }
+        else{
+            result.statuscode = 400;
+            return ResponseEntity.status(result.statuscode).body("No existe un registro con ese id");
+        }
 
     }
 
@@ -89,7 +109,8 @@ public class UsuarioRestController {
 
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "Exito en añadir un usuario"),
-        @ApiResponse(responseCode = "400", description = "Hubo un error al llenar la solicitud")
+        @ApiResponse(responseCode = "400", description = "Hubo un error al llenar la solicitud"),
+        @ApiResponse(responseCode = "500", description = "Hubo un error en el servidor")
     })
     public ResponseEntity Add(@RequestBody Usuario usuario) {
         Result result = new Result();
@@ -114,17 +135,27 @@ public class UsuarioRestController {
     }
 
     @PutMapping("/{IdUsuario}")
-    @Operation(summary = "Actualizar un Usuario", description = "Metodo que añade un usuario a la base de datos")
+    @Operation(summary = "Actualizar un Usuario", description = "Metodo que actualiza un usuario a la base de datos")
 
     @ApiResponses({
         @ApiResponse(responseCode = "200", description = "Exito al actualizar un usuario"),
-        @ApiResponse(responseCode = "400", description = "Hubo un error al llenar la solicitud")
+        @ApiResponse(responseCode = "404", description = "No se encontro un usuario con ese id")
     })
-    public ResponseEntity Update(@RequestBody Usuario usuario, @PathVariable("IdUsuario") int idUsuario) {
+    public ResponseEntity Update(@RequestBody Usuario usuario, @PathVariable("IdUsuario") Integer idUsuario) {
 
         Result result = usuariojpadaoimplementation.Update(idUsuario, usuario);
+        
+        if(result.Correct){
+            result.statuscode = 200;
+            return ResponseEntity.status(result.statuscode).body("Registro actualizado");
+        }
+        else if(!result.Correct){
+            result.statuscode = 404;
+            return ResponseEntity.status(result.statuscode).body("No existe un registro con ese id");
+        }else{
+             return ResponseEntity.status(500).body("Error inesperado del servidor");
+        }
 
-        return ResponseEntity.status(result.statuscode).body(result);
     }
 
 }
